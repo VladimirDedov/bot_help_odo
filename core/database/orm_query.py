@@ -1,8 +1,9 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Bundle
+from aiogram import types
 
-from core.database.models import Instructions, Problems
+from core.database.models import Instructions, Problems, User
 
 async def orm_get_all_list(table_name: str, session: AsyncSession):
     if table_name == 'instructions':
@@ -19,3 +20,10 @@ async def orm_get_row(session: AsyncSession, id: int):
     return result.scalar()
 
 
+async def add_user(message: types.Message, session: AsyncSession):
+    obj = User(
+        user_id=message.from_user.id,
+        name=message.from_user.first_name
+    )
+    session.add(obj)
+    await session.commit()

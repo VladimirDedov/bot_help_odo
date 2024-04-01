@@ -4,14 +4,15 @@ from aiogram.filters import CommandStart, Command, or_f
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.keyboards.inline import START_INLINE_KBD, get_callback_btns
-from core.database.orm_query import orm_get_all_list
+from core.database.orm_query import orm_get_all_list, add_user
 
 user_private_router = Router()
 
 
 @user_private_router.message(or_f(CommandStart, F.text.lower().in_({'start', 'начать', 'cтарт'})))
-async def send_main_menu(message: types.Message):
+async def send_main_menu(message: types.Message, session: AsyncSession):
     await message.answer('Выберите из списка ниже, что вы хотите изучить: \n', reply_markup=START_INLINE_KBD)
+    await add_user(message=message, session=session)
 
 
 @user_private_router.callback_query(F.data.in_({'instructions', 'problems'}))
