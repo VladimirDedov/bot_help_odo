@@ -50,7 +50,7 @@ class Problems(Base):
     photo_10: Mapped[Optional[str]] = mapped_column(String(150))
 
 
-class user(Base):
+class User(Base):
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

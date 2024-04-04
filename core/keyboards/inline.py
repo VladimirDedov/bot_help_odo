@@ -17,6 +17,6 @@ def get_callback_btns(
 START_INLINE_KBD = get_callback_btns(
     btns={
         "Инструкции": "instructions",
-        "Частые вопросы": "questions"
+        "Частые вопросы": "problems"
     }
 )
