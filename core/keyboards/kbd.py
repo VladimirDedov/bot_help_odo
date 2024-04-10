@@ -10,7 +10,13 @@ def get_keybord_btns(
         request_location: int = None,
         size: tuple = (2,)
 ):
-    for text, index in enumerate(btns):
+    for index, text in enumerate(btns, start=0):
         keyboard.add(KeyboardButton(text=text))
 
     return keyboard.adjust(*size).as_markup(resize_keyboard = True)
+
+ADMIN_KBD = get_keybord_btns(
+    'Добавить инструкцию',
+    'Добавить вопрос',
+    size=(2,)
+)

@@ -3,13 +3,14 @@ from aiogram import types
 from aiogram.filters import CommandStart, Command, or_f
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.filters.chat_types import ChatTypeFilter
 from core.keyboards.inline import START_INLINE_KBD, get_callback_btns
 from core.database.orm_query import orm_get_all_list, orm_add_user, orm_get_row
 
 user_private_router = Router()
+user_private_router.message.filter(ChatTypeFilter(['private']))
 
-
-@user_private_router.message(or_f(CommandStart, F.text.lower().in_({'start', 'начать', 'cтарт'})))
+@user_private_router.message(or_f(CommandStart(), F.text.lower().in_({'start', 'начать', 'cтарт'})))
 async def send_main_menu(message: types.Message, session: AsyncSession):
     await message.answer('Выберите из списка ниже, что вы хотите изучить: \n', reply_markup=START_INLINE_KBD)
     await orm_add_user(message=message, session=session)

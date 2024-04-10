@@ -27,8 +27,6 @@ async def orm_get_row(session: AsyncSession, table_name: str, id: int):
 async def orm_add_user(message: types.Message, session: AsyncSession):
     query = select(User.user_id)
     result = await session.execute(query)
-
-    print(type(message.from_user.id))
     lst_users = result.scalars().all()
     if message.from_user.id not in lst_users:
         obj = User(
