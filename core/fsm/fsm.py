@@ -1,20 +1,7 @@
 """Данные Машины состояний """
 
-from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
-FSM_LIST = [
-    'photo_1' ,
-    'photo_2' ,
-    'photo_3' ,
-    'photo_4' ,
-    'photo_5' ,
-    'photo_6' ,
-    'photo_7' ,
-    'photo_8' ,
-    'photo_9' ,
-    'photo_10'
-]
 
 class Add_Instr_Problem(StatesGroup):
     model_name_is_Problems = False
@@ -32,4 +19,18 @@ class Add_Instr_Problem(StatesGroup):
     photo_8 = State()
     photo_9 = State()
     photo_10 = State()
+
+
+FSM_LIST = [
+    Add_Instr_Problem.photo_1,
+    Add_Instr_Problem.photo_2,
+    Add_Instr_Problem.photo_3,
+    Add_Instr_Problem.photo_4,
+    Add_Instr_Problem.photo_5,
+    Add_Instr_Problem.photo_6,
+    Add_Instr_Problem.photo_7,
+    Add_Instr_Problem.photo_8,
+    Add_Instr_Problem.photo_9,
+    Add_Instr_Problem.photo_10
+]
 
