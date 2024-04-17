@@ -62,6 +62,7 @@ async def orm_add_problem(data: dict,
         photo_10=data['photo_10'])
 
     if model_name == Problems:
-        obj = model_name(desicion=data['desicion'])
+        obj.decision=data['decision']
+
     session.add(obj)
     await session.commit()
