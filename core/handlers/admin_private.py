@@ -18,8 +18,8 @@ admin_router.message.filter(ChatTypeFilter(['private']), IsAdmin())
 
 @admin_router.message(or_f(CommandStart(), F.text.lower() == "menu"))
 async def start_cmd(message: Message):
-    await message.answer('Выбирай кнопочки', reply_markup=START_INLINE_KBD)
-    await message.answer('Ты бог, делай что хочешь...', reply_markup=ADMIN_KBD)
+    await message.answer(f'<u><b>Выбирай кнопочки</b></u>', reply_markup=START_INLINE_KBD)
+    await message.answer(f'<u><b>Ты бог, делай что хочешь...</b></u>', reply_markup=ADMIN_KBD)
 
 
 """Машина состояний для добавления записей в БД"""
@@ -39,8 +39,9 @@ async def cansel_handler(message: Message, state: FSMContext) -> None:
     current_state = await state.get_state()
     if current_state is None:
         return
-    await message.answer('Действия отменены', reply_markup=ADMIN_KBD)
     await state.clear()
+    await message.answer('Действия отменены', reply_markup=ADMIN_KBD)
+
 
 
 @admin_router.message(StateFilter('*'), F.text.casefold() == 'end')
@@ -70,7 +71,7 @@ async def cmd_end(message: Message, session: AsyncSession, state: FSMContext):
 @admin_router.message(StateFilter(state_fsm.name), F.text)
 async def fsm_add_description(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await message.answer("Введите описание проблемы. Разделитель _photo_", reply_markup=keyboard_remove)
+    await message.answer("Введите описание проблемы. Разделитель _photo_", reply_markup=get_keybord_btns("Заново", "Отмена"))
     await state.set_state(state_fsm.description)
 
 
