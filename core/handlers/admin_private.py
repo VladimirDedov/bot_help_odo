@@ -16,8 +16,11 @@ admin_router = Router()
 admin_router.message.filter(ChatTypeFilter(['private']), IsAdmin())
 
 
-@admin_router.message(or_f(CommandStart(), F.text.lower() == "menu"))
-async def start_cmd(message: Message):
+@admin_router.message(or_f(CommandStart(), F.text.lower().in_({"menu", "заново"})))
+async def start_cmd(message: Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        await state.clear()
     await message.answer(f'<u><b>Выбирай кнопочки</b></u>', reply_markup=START_INLINE_KBD)
     await message.answer(f'<u><b>Ты бог, делай что хочешь...</b></u>', reply_markup=ADMIN_KBD)
 
@@ -37,22 +40,17 @@ async def fsm_add_name(message: Message, state: FSMContext):
 async def cansel_handler(message: Message, state: FSMContext) -> None:
     """Команда отмена"""
     current_state = await state.get_state()
-    if current_state is None:
-        return
-    await state.clear()
-    await message.answer('Действия отменены', reply_markup=ADMIN_KBD)
-
+    if current_state is not None:
+        await state.clear()
+        await message.answer('Действия отменены', reply_markup=ADMIN_KBD)
 
 
 @admin_router.message(StateFilter('*'), F.text.casefold() == 'end')
 async def cmd_end(message: Message, session: AsyncSession, state: FSMContext):
     """Завершение FSM и запись в бд"""
-    print('Хендлер ЭНД')
     data = await state.get_data()
     current_state = await state.get_state()
     count = int(current_state.split('_')[-1])
-    print(data.keys())
-    print(f'count = {count}')
     model_name = Instructions
     if 'decision' in data.keys():
         model_name = Problems
@@ -71,7 +69,8 @@ async def cmd_end(message: Message, session: AsyncSession, state: FSMContext):
 @admin_router.message(StateFilter(state_fsm.name), F.text)
 async def fsm_add_description(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await message.answer("Введите описание проблемы. Разделитель _photo_", reply_markup=get_keybord_btns("Заново", "Отмена"))
+    await message.answer("Введите описание проблемы. Разделитель _photo_",
+                         reply_markup=get_keybord_btns("Заново", "Отмена"))
     await state.set_state(state_fsm.description)
 
 
