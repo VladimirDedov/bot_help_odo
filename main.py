@@ -19,6 +19,7 @@ async def main():
     await create_db()
     dp.update.middleware(DataBaseSession(session_pool=session_maker))#сессия для работы с бд
     await bot.delete_webhook(drop_pending_updates=True)
+    #await bot.delete_my_commands(scope=types.BotCommandScopeAllPrivateChats) удаляет все команды
     await dp.start_polling(bot, allowed_updates=config.ALLOWED_UPDATES)
 
 if __name__ == "__main__":

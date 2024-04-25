@@ -15,4 +15,5 @@ class IsAdmin(Filter):
         pass
 
     async def __call__(self, message: types.Message) -> bool:
-        return message.from_user.id == int(os.getenv("ADMIN_ID"))
+        lst_of_admin = set(map(int, os.getenv("ADMIN_ID").split(',')))
+        return message.from_user.id in lst_of_admin
